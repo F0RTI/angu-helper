@@ -1,0 +1,123 @@
+<section class="upload-page">
+  <div class="panel">
+    <p class="eyebrow">{{ 'imageConverter.eyebrow' | transloco }}</p>
+    <h1>{{ 'imageConverter.title' | transloco }}</h1>
+    <p class="lead">{{ 'imageConverter.lead' | transloco }}</p>
+
+    <div class="actions">
+      <label class="picker">
+        <input
+          #fileInput
+          type="file"
+          multiple
+          [attr.accept]="acceptAttribute()"
+          (change)="onFilesSelected($event)"
+        />
+        <span>{{ 'imageConverter.actions.selectFiles' | transloco }}</span>
+      </label>
+
+      <label class="format-select">
+        <span>{{ 'imageConverter.actions.convertTo' | transloco }}</span>
+        <select [value]="selectedFormat" (change)="onFormatChange($event)">
+          @for (option of formatOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </label>
+
+      <button
+        type="button"
+        class="primary"
+        (click)="convertFiles()"
+        [disabled]="!canUpload() || isConverting()"
+      >
+        {{
+          (isConverting()
+            ? 'imageConverter.actions.convertingFiles'
+            : 'imageConverter.actions.convertFiles'
+          ) | transloco
+        }}
+      </button>
+
+      <button
+        type="button"
+        class="ghost"
+        (click)="downloadConvertedFiles()"
+        [disabled]="!canDownload()"
+      >
+        {{ 'imageConverter.actions.download' | transloco }}
+      </button>
+
+      <button
+        type="button"
+        class="ghost"
+        (click)="downloadArchive()"
+        [disabled]="!canDownload() || isArchiving()"
+      >
+        {{
+          (isArchiving()
+            ? 'imageConverter.actions.buildingZip'
+            : 'imageConverter.actions.downloadZip'
+          ) | transloco
+        }}
+      </button>
+
+      <button type="button" class="ghost" (click)="clearSelection(fileInput)">
+        {{ 'imageConverter.actions.clear' | transloco }}
+      </button>
+    </div>
+
+    <div class="summary">
+      <span class="badge">
+        {{ 'imageConverter.summary.status' | transloco }}:
+        {{ 'imageConverter.status.' + status() | transloco }}
+      </span>
+      <span class="badge"
+        >{{ 'imageConverter.summary.format' | transloco }}: {{ selectedFormat }}</span
+      >
+      <span class="badge">
+        {{ 'imageConverter.summary.converted' | transloco }}: {{ convertedFiles().length }}
+      </span>
+      <span>{{ 'imageConverter.summary.before' | transloco }}: {{ formatSize(totalBytes()) }}</span>
+      <span
+        >{{ 'imageConverter.summary.after' | transloco }}:
+        {{ formatSize(convertedTotalBytes()) }}</span
+      >
+    </div>
+
+    <p class="message">
+      @if (conversionMessage()) {
+        {{ conversionMessage() }}
+      } @else {
+        {{ messageKey() | transloco: messageParams() }}
+      }
+    </p>
+
+    @if (files().length) {
+      <ul class="queue">
+        @for (file of files(); track file.name + file.size + $index) {
+          <li class="queue-item">
+            <div>
+              <strong>{{ file.name }}</strong>
+              <p>{{ file.type || ('imageConverter.queue.unknownType' | transloco) }}</p>
+              <p>{{ 'imageConverter.summary.before' | transloco }}: {{ formatSize(file.size) }}</p>
+
+              @if (getConvertedFile($index); as convertedFile) {
+                <p>
+                  {{ 'imageConverter.summary.after' | transloco }}:
+                  {{ formatSize(convertedFile.size) }}
+                </p>
+              }
+            </div>
+
+            <button type="button" class="remove" (click)="removeFile($index)">
+              {{ 'imageConverter.actions.remove' | transloco }}
+            </button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="empty-state">{{ 'imageConverter.queue.empty' | transloco }}</div>
+    }
+  </div>
+</section>

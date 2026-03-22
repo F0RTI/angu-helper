@@ -1,0 +1,39 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <p class="eyebrow">{{ 'app.brand.eyebrow' | transloco }}</p>
+      <h1>{{ 'app.brand.title' | transloco }}</h1>
+      <p class="subtitle">{{ 'app.brand.subtitle' | transloco }}</p>
+    </div>
+
+    <nav class="service-nav">
+      <p class="nav-title">{{ 'app.navigation.title' | transloco }}</p>
+
+      @for (item of serviceLinks; track item.path) {
+        <a
+          class="nav-link"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          {{ item.labelKey | transloco }}
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <label class="language-switcher">
+        <span>{{ 'app.language' | transloco }}</span>
+        <select [value]="activeLang()" (change)="onLanguageChange($event)">
+          @for (option of languageOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </label>
+    </header>
+
+    <router-outlet />
+  </main>
+</div>

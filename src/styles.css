@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(74, 222, 128, 0.16), transparent 30%),
+    linear-gradient(180deg, #f6fff8 0%, #eef6ff 100%);
+  color: #14213d;
+}
+
+button {
+  height: fit-content;
+}
